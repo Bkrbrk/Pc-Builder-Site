@@ -47,4 +47,17 @@ Future cache / database support
 Notes on normalization
 
 - Normalization must map provider-specific fields into the canonical schema. Missing or unknown values should be represented as null or the string "unknown" — never guess a value.
-- The compatibility engine must treat null/unknown as unknown and only raise errors when known incompatible data is present.
+
+Normalization rules (explicit)
+
+Normalization NEVER guesses specifications. If a value cannot be verified by the normalizer, set it according to the rules below:
+
+- numeric values -> null
+- boolean values -> null
+- enum values -> null
+- text values -> "unknown"
+
+Compatibility rules and engine behavior
+
+- The compatibility engine must never assume missing values. Rules must explicitly check for null/"unknown" and return an info-level result when a check cannot be completed due to missing data.
+- Normalizers should prefer canonical field names (socket, manufacturer, displayName, category, model) and canonical enumerations (see docs/component-schema.md). Do not invent new fields that duplicate meaning.

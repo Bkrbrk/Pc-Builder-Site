@@ -125,7 +125,7 @@ Response (success):
         "level": "error",
         "message": "CPU socket AM5 is not compatible with motherboard socket LGA1700",
         "component_ids": ["cpu-1","mb-1"],
-        "details": { "cpu_socket": "AM5", "mb_socket": "LGA1700" }
+        "details": { "socket": "AM5" }
       }
     ]
   }
