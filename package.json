@@ -1,0 +1,8 @@
+{
+  "name": "pc-builder",
+  "version": "0.1.0",
+  "description": "PC Parts Compatibility Checker",
+  "private": true,
+  "author": "Bkrbrk",
+  "license": "MIT"
+}
