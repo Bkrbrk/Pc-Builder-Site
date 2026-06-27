@@ -9,12 +9,43 @@ Guiding principles
 - Do not guess or fabricate values during normalization.
 - Use consistent units: mm for lengths/heights, W for power, GB/TB for capacities, MHz for frequencies, and so on.
 
+Canonical Manufacturers
+
+The list below shows common canonical manufacturer examples that the normalization layer should prefer. This is intentionally an extensible set — it is not a fixed or complete list. New manufacturers may be added in the future without changing the schema; normalization adapters should map provider-specific manufacturer strings to a canonical manufacturer value whenever possible.
+
+During normalization:
+- Map provider manufacturer strings to a canonical manufacturer value when a confident mapping exists.
+- If a confident mapping cannot be determined, set the `manufacturer` field to null rather than inventing a value.
+
+Common canonical manufacturers (examples):
+
+- AMD
+- Intel
+- NVIDIA
+- ASUS
+- MSI
+- Gigabyte
+- ASRock
+- Corsair
+- Kingston
+- Samsung
+- Crucial
+- WD
+- Seagate
+- Cooler Master
+- NZXT
+
+Note: normalized objects MUST use canonical manufacturer values (from the project's canonical list or later extensions). Arbitrary free-text manufacturer names are not allowed in normalized data; map to a canonical name or use null.
+
 Universal PCComponent (base) schema (JSON-like)
 
 {
   "id": "string",              // required: internal id or provider id
+  "manufacturer": "string",   // required: canonical manufacturer (see Canonical Manufacturers)
+  "model": "string",          // required: vendor model identifier
   "category": "string",      // required: canonical category like "cpu", "motherboard", "ram", "gpu", "psu", "ssd", "hdd", "cooler", "case", "case_fan"
-  "title": "string",         // display title
+  "displayName": "string",   // required: human-friendly title for UI
+  "title": "string",         // legacy/display title (may be present)
   "source": {                  // optional: provider metadata
     "provider": "string",
     "provider_id": "string",
@@ -51,15 +82,17 @@ Compatibility fields:
 - socket
 - tdp_w
 Display fields:
-- title, core/thread counts, clocks
+- displayName, title, core/thread counts, clocks
 Unknown handling:
 - missing socket -> null; compatibility rules that need socket return info
 
 Example:
 {
   "id": "cpu-1",
+  "manufacturer": "AMD",
+  "model": "Ryzen 9 7950X",
   "category": "cpu",
-  "title": "AMD Ryzen 9 7950X",
+  "displayName": "AMD Ryzen 9 7950X",
   "specs": { "socket": "AM5", "tdp_w": 170 }
 }
 
@@ -83,8 +116,10 @@ Compatibility fields:
 Example:
 {
   "id": "mb-1",
+  "manufacturer": "ASUS",
+  "model": "X670-EXAMPLE",
   "category": "motherboard",
-  "title": "Example X670 ATX",
+  "displayName": "ASUS X670 EXAMPLE",
   "specs": { "cpu_socket": "AM5", "supported_ram": ["DDR5"], "form_factor": "ATX", "m2_slot_count": 3, "sata_port_count": 4 }
 }
 
@@ -105,8 +140,10 @@ Compatibility fields:
 Example:
 {
   "id": "ram-1",
+  "manufacturer": "Corsair",
+  "model": "Vengeance DDR5 32GB",
   "category": "ram",
-  "title": "32GB (2x16) DDR5-6000",
+  "displayName": "Corsair Vengeance 32GB (2x16) DDR5-6000",
   "specs": { "generation": "DDR5", "capacity_gb": 32, "modules": 2, "speed_mhz": 6000 }
 }
 
@@ -126,8 +163,10 @@ Compatibility fields:
 Example:
 {
   "id": "gpu-1",
+  "manufacturer": "NVIDIA",
+  "model": "RTX-40X-EX",
   "category": "gpu",
-  "title": "Example RTX 40X",
+  "displayName": "NVIDIA Example RTX 40X",
   "specs": { "length_mm": 320, "power_draw_w": 300, "slot_width": 2 }
 }
 
@@ -153,8 +192,10 @@ Compatibility fields:
 Example:
 {
   "id": "psu-1",
+  "manufacturer": "Corsair",
+  "model": "RM750-EX",
   "category": "psu",
-  "title": "Example 750W Gold",
+  "displayName": "Corsair RM750 Gold",
   "specs": { "wattage": 750, "connectors": { "eps_12v": 1, "pcie_8pin": 3, "sata": 6 } }
 }
 
@@ -235,8 +276,10 @@ Examples of normalized object with unknowns:
 
 {
   "id": "gpu-2",
+  "manufacturer": null,
+  "model": "Generic-GPU",
   "category": "gpu",
-  "title": "Generic GPU",
+  "displayName": "Generic GPU",
   "specs": { "length_mm": null, "power_draw_w": 220 }
 }
 
