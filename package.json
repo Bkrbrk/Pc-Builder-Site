@@ -4,5 +4,11 @@
   "description": "PC Parts Compatibility Checker",
   "private": true,
   "author": "Bkrbrk",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "backend:dev": "npm --prefix backend run dev",
+    "backend:start": "npm --prefix backend run start",
+    "dev": "npm run backend:dev",
+    "start": "npm run backend:start"
+  }
 }
